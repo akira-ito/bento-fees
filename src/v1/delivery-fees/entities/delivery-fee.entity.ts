@@ -1,5 +1,3 @@
-export class DeliveryFee {}
-
 export class Coordinates {
   lat: number;
   lng: number;
@@ -36,7 +34,7 @@ export class User {
   }
 }
 
-export class Transaction {
+export class DeliveryFee {
   addressFrom: Address;
   addressTo: Address;
   merchant: Merchant;
