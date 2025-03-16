@@ -6,8 +6,11 @@ import { CreateDeliveryFeeDto } from './dto/create-delivery-fee.dto';
 export class DeliveryFeesService {
   constructor(private readonly bentoService: BentoService) {}
 
-  create(createDeliveryFeeDto: CreateDeliveryFeeDto) {
-    const deliveryFee = this.bentoService.getDeliveryFee(createDeliveryFeeDto);
+  create(createDeliveryFeeDto: CreateDeliveryFeeDto, bearerToken: string) {
+    const deliveryFee = this.bentoService.getDeliveryFee(
+      createDeliveryFeeDto,
+      bearerToken,
+    );
     return deliveryFee;
   }
 
