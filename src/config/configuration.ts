@@ -1,5 +1,6 @@
 export interface BentoConfig {
   host: string;
+  timeout: number;
 }
 
 export interface AppConfiguration {
@@ -7,10 +8,12 @@ export interface AppConfiguration {
   bentoIntegration: BentoConfig;
 }
 
-export default () =>
-  ({
-    port: parseInt(process.env.PORT, 10) || 3000,
+export default () => {
+  return {
+    port: parseInt(process.env.PORT || '3000', 10),
     bentoIntegration: {
       host: process.env.BENTO_HOST,
+      timeout: parseInt(process.env.BENTO_HTTP_TIMEOUT || '5000', 10),
     },
-  }) as AppConfiguration;
+  } as AppConfiguration;
+};
