@@ -1,7 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { BentoService } from 'src/bento/bento.service';
-import { CreateDeliveryFeeDto } from './dto/create-delivery-fee.dto';
-import { DeliveryFee } from './entities/delivery-fee.entity';
+import {
+  CreateDeliveryFeeDto,
+  CreateDeliveryFeeResponseDto,
+} from './dto/create-delivery-fee.dto';
 
 @Injectable()
 export class DeliveryFeesService {
@@ -10,7 +12,7 @@ export class DeliveryFeesService {
   async create(
     createDeliveryFeeDto: CreateDeliveryFeeDto,
     bearerToken: string,
-  ): Promise<DeliveryFee> {
+  ): Promise<CreateDeliveryFeeResponseDto> {
     const retrieveDeliveryFee = await this.bentoService.retrieveDeliveryFee(
       createDeliveryFeeDto,
       bearerToken,

@@ -30,3 +30,11 @@ export class CreateDeliveryFeeDto {
   merchant: MerchantDto;
   user: UserDto;
 }
+
+export class CreateDeliveryFeeResponseDto {
+  originalFee: number;
+  newFee: number;
+  deliveryTime: number;
+  distanceMeters: number;
+  message: string | null;
+}
