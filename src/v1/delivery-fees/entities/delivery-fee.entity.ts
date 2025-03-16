@@ -8,47 +8,10 @@ export class Coordinates {
   }
 }
 
-export class Address {
-  coordinates?: Coordinates;
-  coordinatesAdjustment?: Coordinates;
-
-  constructor(coordinates?: Coordinates, coordinatesAdjustment?: Coordinates) {
-    this.coordinates = coordinates;
-    this.coordinatesAdjustment = coordinatesAdjustment;
-  }
-}
-
-export class Merchant {
-  id: string;
-
-  constructor(id: string) {
-    this.id = id;
-  }
-}
-
-export class User {
-  uuid: string;
-
-  constructor(uuid: string) {
-    this.uuid = uuid;
-  }
-}
-
-export class DeliveryFee {
-  addressFrom: Address;
-  addressTo: Address;
-  merchant: Merchant;
-  user: User;
-
-  constructor(
-    addressFrom: Address,
-    addressTo: Address,
-    merchant: Merchant,
-    user: User,
-  ) {
-    this.addressFrom = addressFrom;
-    this.addressTo = addressTo;
-    this.merchant = merchant;
-    this.user = user;
-  }
+export interface DeliveryFee {
+  originalFee: number;
+  newFee: number;
+  deliveryTime: number;
+  distanceMeters: number;
+  message: string | null;
 }

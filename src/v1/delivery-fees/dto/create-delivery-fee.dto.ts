@@ -5,9 +5,12 @@ export class CoordinatesDto {
   lng: number;
 }
 
-export class AddressDto {
-  coordinates?: CoordinatesDto;
-  coordinatesAdjustment?: CoordinatesDto;
+export class AddressFromDto {
+  coordinates: CoordinatesDto;
+}
+
+export class AddressToDto {
+  coordinatesAdjustment: CoordinatesDto;
 }
 
 export class MerchantDto {
@@ -22,8 +25,8 @@ export class CreateDeliveryFeeDto {
   @ApiProperty({
     description: 'Address from',
   })
-  addressFrom: AddressDto;
-  addressTo: AddressDto;
+  addressFrom: AddressFromDto;
+  addressTo: AddressToDto;
   merchant: MerchantDto;
   user: UserDto;
 }

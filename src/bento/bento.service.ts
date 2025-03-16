@@ -3,11 +3,12 @@ import { Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AxiosError } from 'axios';
 import { AppConfiguration, BentoConfig } from 'src/config/configuration';
-import { DeliveryFee } from 'src/v1/delivery-fees/entities/delivery-fee.entity';
 import {
   BentoException,
   BentoExceptionType,
 } from './exceptions/bento.exception';
+import { RetrieveDeliveryFeeRequest } from './schemas/request/retrieve-delivery-fee.req';
+import { RetrieveDeliveryFeeResponse } from './schemas/response/retrieve-delivery-fee.response';
 
 @Injectable()
 export class BentoService {
@@ -18,7 +19,10 @@ export class BentoService {
     private configService: ConfigService<AppConfiguration, true>,
   ) {}
 
-  async getDeliveryFee(deliveryFee: DeliveryFee, bearerToken: string) {
+  async retrieveDeliveryFee(
+    deliveryFee: RetrieveDeliveryFeeRequest,
+    bearerToken: string,
+  ): Promise<RetrieveDeliveryFeeResponse> {
     try {
       const bentoConfig =
         this.configService.get<BentoConfig>('bentoIntegration');
@@ -34,11 +38,9 @@ export class BentoService {
         },
       );
 
-      const deliveryFeeData: DeliveryFee = response.data as DeliveryFee;
-
-      return deliveryFee;
+      return response.data as RetrieveDeliveryFeeResponse;
     } catch (error: unknown) {
-      const { response, request, message } = error as AxiosError;
+      const { response, message } = error as AxiosError;
 
       if (response?.status === 401) {
         this.logger.error('Invalid token', {
@@ -48,10 +50,6 @@ export class BentoService {
           'Unauthorized',
           BentoExceptionType.UNAUTHORIZED,
         );
-      }
-      if (request) {
-        console.log(request);
-        return;
       }
       this.logger.error('Error getting delivery fee', {
         message,

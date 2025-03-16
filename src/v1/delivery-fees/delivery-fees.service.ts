@@ -1,17 +1,29 @@
 import { Injectable } from '@nestjs/common';
 import { BentoService } from 'src/bento/bento.service';
 import { CreateDeliveryFeeDto } from './dto/create-delivery-fee.dto';
+import { DeliveryFee } from './entities/delivery-fee.entity';
 
 @Injectable()
 export class DeliveryFeesService {
   constructor(private readonly bentoService: BentoService) {}
 
-  create(createDeliveryFeeDto: CreateDeliveryFeeDto, bearerToken: string) {
-    const deliveryFee = this.bentoService.getDeliveryFee(
+  async create(
+    createDeliveryFeeDto: CreateDeliveryFeeDto,
+    bearerToken: string,
+  ): Promise<DeliveryFee> {
+    const retrieveDeliveryFee = await this.bentoService.retrieveDeliveryFee(
       createDeliveryFeeDto,
       bearerToken,
     );
-    return deliveryFee;
+    const newFee = retrieveDeliveryFee.fee * 1.13;
+
+    return {
+      originalFee: retrieveDeliveryFee.fee,
+      deliveryTime: retrieveDeliveryFee.deliveryTime,
+      distanceMeters: retrieveDeliveryFee.distanceMeters,
+      message: retrieveDeliveryFee.message,
+      newFee,
+    };
   }
 
   findAll() {
