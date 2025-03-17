@@ -2,26 +2,23 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BentoService } from 'src/bento/bento.service';
 import { Repository } from 'typeorm';
-import {
-  CreateDeliveryFeeDto,
-  CreateDeliveryFeeResponseDto,
-} from './dto/create-delivery-fee.dto';
-import { DeliveryFeeRequestsEntity } from './entities/delivery-fee.entity';
+import { CreateDeliveryFeeReqDto } from './dto/create-delivery-fee.dto';
+import { DeliveryFeeRequestEntity } from './entities/delivery-fee-request.entity';
 
 @Injectable()
 export class DeliveryFeesService {
   constructor(
     private readonly bentoService: BentoService,
 
-    @InjectRepository(DeliveryFeeRequestsEntity)
-    private deliveryFeeRequestsRepository: Repository<DeliveryFeeRequestsEntity>,
+    @InjectRepository(DeliveryFeeRequestEntity)
+    private deliveryFeeRequestsRepository: Repository<DeliveryFeeRequestEntity>,
   ) {}
 
   async create(
-    createDeliveryFeeDto: CreateDeliveryFeeDto,
+    createDeliveryFeeDto: CreateDeliveryFeeReqDto,
     bearerToken: string,
     userAgent: string,
-  ): Promise<CreateDeliveryFeeResponseDto> {
+  ): Promise<DeliveryFeeRequestEntity> {
     const retrieveDeliveryFee = await this.bentoService.retrieveDeliveryFee(
       createDeliveryFeeDto,
       bearerToken,
@@ -53,16 +50,13 @@ export class DeliveryFeesService {
       userAgent,
     });
 
-    return {
-      originalFee: retrieveDeliveryFee.fee,
-      deliveryTime: retrieveDeliveryFee.deliveryTime,
-      distanceMeters: retrieveDeliveryFee.distanceMeters,
-      message: retrieveDeliveryFee.message,
-      newFee,
-    };
+    return history;
   }
 
-  findAll() {
-    return `This action returns all deliveryFees`;
+  async findAllRequests(user): Promise<DeliveryFeeRequestEntity[]> {
+    const requests = await this.deliveryFeeRequestsRepository.findBy({
+      userUuid: user.uuid,
+    });
+    return requests;
   }
 }

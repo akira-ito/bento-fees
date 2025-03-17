@@ -11,7 +11,11 @@ import { BentoException } from 'src/bento/exceptions/bento.exception';
 import { AppException } from '../exceptions/exception';
 import { AppAnauthorizedException } from '../exceptions/unauthorizd.exception';
 import { DeliveryFeesService } from './delivery-fees.service';
-import { CreateDeliveryFeeDto } from './dto/create-delivery-fee.dto';
+import {
+  CreateDeliveryFeeReqDto,
+  CreateDeliveryFeeRespDto,
+} from './dto/create-delivery-fee.dto';
+import { FindDeliveryFeeRequestRespDto } from './dto/find-delivery-fee-request.dto';
 
 @Controller()
 export class DeliveryFeesController {
@@ -23,15 +27,22 @@ export class DeliveryFeesController {
   async create(
     @Request() req,
     @Headers('User-Agent') userAgent,
-    @Body() createDeliveryFeeDto: CreateDeliveryFeeDto,
-  ) {
+    @Body() createDeliveryFeeDto: CreateDeliveryFeeReqDto,
+  ): Promise<CreateDeliveryFeeRespDto> {
     this.logger.log('Creating delivery fee', userAgent);
     try {
-      return await this.deliveryFeesService.create(
+      const history = await this.deliveryFeesService.create(
         createDeliveryFeeDto,
         req.token,
         userAgent,
       );
+      return {
+        originalFee: history.originalFee,
+        newFee: history.newFee,
+        deliveryTime: history.deliveryTime,
+        distanceMeters: history.distanceMeters,
+        message: history.message,
+      };
     } catch (error) {
       this.logger.error('Error creating delivery fee', error);
 
@@ -42,8 +53,15 @@ export class DeliveryFeesController {
     }
   }
 
-  @Get()
-  findAll() {
-    return this.deliveryFeesService.findAll();
+  @Get('requests')
+  async findAllRequests(
+    @Request() req,
+  ): Promise<FindDeliveryFeeRequestRespDto[]> {
+    this.logger.log('Finding all delivery fee requests');
+
+    const requests = await this.deliveryFeesService.findAllRequests(req.user);
+    return requests.map((request) =>
+      FindDeliveryFeeRequestRespDto.fromEntity(request),
+    );
   }
 }

@@ -21,7 +21,8 @@ export class UserDto {
   uuid: string;
 }
 
-export class CreateDeliveryFeeDto {
+// Request DTO and Response DTO
+export class CreateDeliveryFeeReqDto {
   @ApiProperty({
     description: 'Address from',
   })
@@ -31,7 +32,7 @@ export class CreateDeliveryFeeDto {
   user: UserDto;
 }
 
-export class CreateDeliveryFeeResponseDto {
+export class CreateDeliveryFeeRespDto {
   originalFee: number;
   newFee: number;
   deliveryTime: number;

@@ -19,7 +19,7 @@ export class Coordinates {
 }
 
 @Entity('delivery_fee_requests')
-export class DeliveryFeeRequestsEntity {
+export class DeliveryFeeRequestEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 

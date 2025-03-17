@@ -1,4 +1,4 @@
-import { Coordinates } from 'src/v1/delivery-fees/entities/delivery-fee.entity';
+import { Coordinates } from 'src/v1/delivery-fees/entities/delivery-fee-request.entity';
 
 export class RetrieveDeliveryFeeRequest {
   addressFrom: {
