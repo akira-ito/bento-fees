@@ -4,18 +4,20 @@ import { APP_GUARD } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
-import { AuthGuard } from './auth/auth.guard';
 import { BentoModule } from './bento/bento.module';
 import configuration, {
   AppConfiguration,
   DatabaseConfig,
 } from './config/configuration';
+import { AuthGuard } from './v1/auth/auth.guard';
+import { AuthModule } from './v1/auth/auth.module';
 import { V1Module } from './v1/v1.module';
 
 @Module({
   imports: [
     V1Module,
     BentoModule,
+    AuthModule,
     ConfigModule.forRoot({
       cache: true,
       isGlobal: true,
@@ -43,6 +45,7 @@ import { V1Module } from './v1/v1.module';
       },
       inject: [ConfigService],
     }),
+    AuthModule,
   ],
   controllers: [AppController],
   providers: [

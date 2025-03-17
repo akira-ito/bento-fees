@@ -9,7 +9,7 @@ import {
 } from '@nestjs/common';
 import { BentoException } from 'src/bento/exceptions/bento.exception';
 import { AppException } from '../exceptions/exception';
-import { AppAnauthorizedException } from '../exceptions/unauthorizd.exception';
+import { AppAnauthorizedException } from '../exceptions/unauthorized.exception';
 import { DeliveryFeesService } from './delivery-fees.service';
 import {
   CreateDeliveryFeeReqDto,
