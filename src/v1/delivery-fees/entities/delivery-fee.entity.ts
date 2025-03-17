@@ -3,6 +3,7 @@ import {
   CreateDateColumn,
   DeleteDateColumn,
   Entity,
+  Point,
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
@@ -17,8 +18,8 @@ export class Coordinates {
   }
 }
 
-@Entity()
-export class DeliveryFee {
+@Entity('delivery_fee_requests')
+export class DeliveryFeeRequestsEntity {
   @PrimaryGeneratedColumn()
   id!: number;
 
@@ -45,4 +46,19 @@ export class DeliveryFee {
 
   @Column('text', { nullable: true })
   message: string | null;
+
+  @Column('geometry')
+  addressFrom: Point;
+
+  @Column('geometry')
+  addressTo: Point;
+
+  @Column('varchar', { length: 255 })
+  userUuid: string;
+
+  @Column('varchar', { length: 255 })
+  merchantUuid: string;
+
+  @Column('varchar', { length: 255 })
+  userAgent: string;
 }
