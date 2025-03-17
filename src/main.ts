@@ -15,6 +15,7 @@ async function bootstrap() {
     .setTitle('Fees API microservice')
     .setDescription('The fees API description')
     .setVersion('1.0')
+    .addBearerAuth()
     .build();
   const documentFactory = () => SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, documentFactory);

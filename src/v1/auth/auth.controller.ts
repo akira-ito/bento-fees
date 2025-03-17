@@ -6,6 +6,7 @@ import {
   Logger,
   Post,
 } from '@nestjs/common';
+import { ApiResponse } from '@nestjs/swagger';
 import { BentoException } from 'src/bento/exceptions/bento.exception';
 import { AppException } from '../exceptions/exception';
 import { AppAnauthorizedException } from '../exceptions/unauthorized.exception';
@@ -22,6 +23,14 @@ export class AuthController {
   @Public()
   @HttpCode(HttpStatus.OK)
   @Post('login')
+  @ApiResponse({
+    status: 201,
+    description: 'The record has been successfully created.',
+    type: SignInRespDto,
+  })
+  @ApiResponse({ status: 403, description: 'Forbidden.' })
+  @ApiResponse({ status: 400, description: 'Bad Request.' })
+  @ApiResponse({ status: 401, description: 'Unauthorized.' })
   async signIn(@Body() signInDto: SignInReqDto): Promise<SignInRespDto> {
     try {
       return await this.authService.signIn(

@@ -3,6 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { BentoService } from 'src/bento/bento.service';
 import { Repository } from 'typeorm';
 import { CreateDeliveryFeeReqDto } from './dto/create-delivery-fee.dto';
+import { PaginateReqDto } from './dto/find-delivery-fee-request.dto';
 import { DeliveryFeeRequestEntity } from './entities/delivery-fee-request.entity';
 
 @Injectable()
@@ -53,10 +54,17 @@ export class DeliveryFeesService {
     return history;
   }
 
-  async findAllRequests(user): Promise<DeliveryFeeRequestEntity[]> {
-    const requests = await this.deliveryFeeRequestsRepository.findBy({
-      userUuid: user.uuid,
-    });
-    return requests;
+  async findAllRequests(
+    user,
+    paginate: PaginateReqDto,
+  ): Promise<[DeliveryFeeRequestEntity[], number]> {
+    const [requests, total] =
+      await this.deliveryFeeRequestsRepository.findAndCount({
+        where: { userUuid: user.uuid },
+        take: paginate.limit,
+        skip: paginate.limit * (paginate.page - 1),
+        order: { createdAt: paginate.order },
+      });
+    return [requests, total];
   }
 }
