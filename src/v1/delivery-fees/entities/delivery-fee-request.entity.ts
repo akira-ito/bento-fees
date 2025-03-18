@@ -1,12 +1,5 @@
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  Point,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Column, Entity, Point } from 'typeorm';
+import { BaseEntity } from './base.entity';
 
 export class Coordinates {
   lat: number;
@@ -19,19 +12,7 @@ export class Coordinates {
 }
 
 @Entity('delivery_fee_requests')
-export class DeliveryFeeRequestEntity {
-  @PrimaryGeneratedColumn()
-  id!: number;
-
-  @CreateDateColumn({ type: 'timestamptz' })
-  readonly createdAt!: Date;
-
-  @UpdateDateColumn({ type: 'timestamptz' })
-  readonly updatedAt!: Date;
-
-  @DeleteDateColumn({ type: 'timestamptz' })
-  deletedAt!: Date;
-
+export class DeliveryFeeRequestEntity extends BaseEntity {
   @Column('numeric', { precision: 10, scale: 2 })
   originalFee: number;
 

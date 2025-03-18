@@ -8,8 +8,8 @@ import {
 } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
 import { BentoException } from 'src/bento/exceptions/bento.exception';
-import { AppException } from '../exceptions/exception';
-import { AppAnauthorizedException } from '../exceptions/unauthorized.exception';
+import { AppInternalServerException } from '../exceptions/internal-server.exception';
+import { AppUnauthorizedException } from '../exceptions/unauthorized.exception';
 import { AuthService } from './auth.service';
 import { Public } from './constant';
 import { SignInReqDto, SignInRespDto } from './dto/sign-in.dto';
@@ -41,9 +41,9 @@ export class AuthController {
       this.logger.error('Error signIn', error);
 
       if (error instanceof BentoException) {
-        throw new AppAnauthorizedException(error.message, error);
+        throw new AppUnauthorizedException(error.message, error);
       }
-      throw new AppException('An error occurred', error);
+      throw new AppInternalServerException('An error occurred', error);
     }
   }
 }

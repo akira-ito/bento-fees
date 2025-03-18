@@ -1,4 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import { DecimalTransformer } from 'src/transformer/decimal.transformer';
+import { DeliveryFeeRequestEntity } from '../entities/delivery-fee-request.entity';
 
 export class CoordinatesDto {
   lat: number;
@@ -67,24 +70,28 @@ export class CreateDeliveryFeeRespDto {
     description: 'Original delivery fee',
     example: 1000,
   })
+  @Transform(DecimalTransformer())
   originalFee: number;
 
   @ApiProperty({
     description: 'New delivery fee after adjustments',
     example: 800,
   })
+  @Transform(DecimalTransformer())
   newFee: number;
 
   @ApiProperty({
     description: 'Estimated delivery time in minutes',
     example: 45,
   })
+  @Transform(DecimalTransformer())
   deliveryTime: number;
 
   @ApiProperty({
     description: 'Distance in meters between the origin and destination',
     example: 12000,
   })
+  @Transform(DecimalTransformer())
   distanceMeters: number;
 
   @ApiProperty({
@@ -93,4 +100,30 @@ export class CreateDeliveryFeeRespDto {
     nullable: true,
   })
   message: string | null;
+
+  public constructor(
+    originalFee: number,
+    newFee: number,
+    deliveryTime: number,
+    distanceMeters: number,
+    message: string | null,
+  ) {
+    this.originalFee = originalFee;
+    this.newFee = newFee;
+    this.deliveryTime = deliveryTime;
+    this.distanceMeters = distanceMeters;
+    this.message = message;
+  }
+
+  public static fromRequestEntity(
+    entity: DeliveryFeeRequestEntity,
+  ): CreateDeliveryFeeRespDto {
+    return new CreateDeliveryFeeRespDto(
+      entity.originalFee,
+      entity.newFee,
+      entity.deliveryTime,
+      entity.distanceMeters,
+      entity.message,
+    );
+  }
 }

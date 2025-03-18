@@ -1,13 +1,27 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
+import { MessageCode } from 'src/filter/app-response.dto';
+
+export interface AppResponseException {
+  readonly status: HttpStatus;
+  readonly message: string;
+  readonly messageCode: MessageCode;
+  readonly error?: any;
+}
 
 export class AppException extends HttpException {
-  constructor(message: string, error: any) {
+  constructor(
+    message: string,
+    messageCode: MessageCode,
+    status: HttpStatus,
+    error?: any,
+  ) {
     super(
       {
-        status: HttpStatus.INTERNAL_SERVER_ERROR,
-        error: message,
-      },
-      HttpStatus.INTERNAL_SERVER_ERROR,
+        status,
+        message,
+        messageCode,
+      } as AppResponseException,
+      status,
       {
         cause: error,
       },

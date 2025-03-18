@@ -1,9 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { BentoService } from 'src/bento/bento.service';
+import { centsToDollars } from 'src/utils/currency.utils';
 import { Repository } from 'typeorm';
 import { CreateDeliveryFeeReqDto } from './dto/create-delivery-fee.dto';
 import { PaginateReqDto } from './dto/find-delivery-fee-request.dto';
+import {
+  DeliveryFeeConfigurationEntity,
+  DeliveryFeeConfigurationType,
+} from './entities/delivery-fee-configuration.entity';
 import { DeliveryFeeRequestEntity } from './entities/delivery-fee-request.entity';
 
 @Injectable()
@@ -13,6 +18,9 @@ export class DeliveryFeesService {
 
     @InjectRepository(DeliveryFeeRequestEntity)
     private deliveryFeeRequestsRepository: Repository<DeliveryFeeRequestEntity>,
+
+    @InjectRepository(DeliveryFeeConfigurationEntity)
+    private deliveryFeeConfigurationRepository: Repository<DeliveryFeeConfigurationEntity>,
   ) {}
 
   async create(
@@ -24,11 +32,18 @@ export class DeliveryFeesService {
       createDeliveryFeeDto,
       bearerToken,
     );
-    const newFee = retrieveDeliveryFee.fee * 1.13;
+    const deliveryFeeConfiguration =
+      await this.deliveryFeeConfigurationRepository.findOneBy({
+        type: DeliveryFeeConfigurationType.MARGIN_FEE,
+      });
 
-    const history = await this.deliveryFeeRequestsRepository.save({
-      originalFee: retrieveDeliveryFee.fee,
-      newFee,
+    const newFee =
+      retrieveDeliveryFee.fee *
+      (1 + (deliveryFeeConfiguration?.value ?? 13) / 100);
+
+    const deliveryFeeRequest = await this.deliveryFeeRequestsRepository.save({
+      originalFee: centsToDollars(retrieveDeliveryFee.fee),
+      newFee: centsToDollars(newFee),
       deliveryTime: retrieveDeliveryFee.deliveryTime,
       distanceMeters: retrieveDeliveryFee.distanceMeters,
       message: retrieveDeliveryFee.message,
@@ -51,7 +66,7 @@ export class DeliveryFeesService {
       userAgent,
     });
 
-    return history;
+    return deliveryFeeRequest;
   }
 
   async findAllRequests(

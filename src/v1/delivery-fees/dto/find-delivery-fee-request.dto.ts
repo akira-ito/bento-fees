@@ -1,4 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Transform } from 'class-transformer';
+import { DecimalTransformer } from 'src/transformer/decimal.transformer';
 import { DeliveryFeeRequestEntity } from '../entities/delivery-fee-request.entity';
 
 export class PaginateReqDto {
@@ -44,24 +46,28 @@ export class FindDeliveryFeeRequestRespDto {
     description: 'The original delivery fee',
     example: 500,
   })
+  @Transform(DecimalTransformer())
   public originalFee: number;
 
   @ApiProperty({
     description: 'The new delivery fee after adjustments',
     example: 450,
   })
+  @Transform(DecimalTransformer())
   public newFee: number;
 
   @ApiProperty({
     description: 'The delivery time in minutes',
     example: 30,
   })
+  @Transform(DecimalTransformer())
   public deliveryTime: number;
 
   @ApiProperty({
     description: 'The distance in meters',
     example: 1500,
   })
+  @Transform(DecimalTransformer())
   public distanceMeters: number;
 
   @ApiProperty({

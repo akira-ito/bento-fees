@@ -8,13 +8,13 @@ import {
   Query,
   Request,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiResponse } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
 import {
   BentoException,
   BentoExceptionType,
 } from 'src/bento/exceptions/bento.exception';
-import { AppException } from '../exceptions/exception';
-import { AppAnauthorizedException } from '../exceptions/unauthorized.exception';
+import { AppInternalServerException } from '../exceptions/internal-server.exception';
+import { AppUnauthorizedException } from '../exceptions/unauthorized.exception';
 import { DeliveryFeesService } from './delivery-fees.service';
 import {
   CreateDeliveryFeeReqDto,
@@ -34,6 +34,10 @@ export class DeliveryFeesController {
   constructor(private readonly deliveryFeesService: DeliveryFeesService) {}
 
   @Post()
+  @ApiOperation({
+    summary: 'Create a new delivery fee',
+    description: 'Create a new delivery fee request',
+  })
   @ApiResponse({
     status: 201,
     description: 'The record has been successfully created.',
@@ -47,31 +51,25 @@ export class DeliveryFeesController {
     @Headers('User-Agent') userAgent,
     @Body() createDeliveryFeeDto: CreateDeliveryFeeReqDto,
   ): Promise<CreateDeliveryFeeRespDto> {
-    this.logger.log('Creating delivery fee', userAgent);
+    this.logger.log('Creating delivery fee');
     try {
-      const history = await this.deliveryFeesService.create(
+      const deliveryFeeRequest = await this.deliveryFeesService.create(
         createDeliveryFeeDto,
         req.token,
         userAgent,
       );
-      return {
-        originalFee: history.originalFee,
-        newFee: history.newFee,
-        deliveryTime: history.deliveryTime,
-        distanceMeters: history.distanceMeters,
-        message: history.message,
-      };
+      return CreateDeliveryFeeRespDto.fromRequestEntity(deliveryFeeRequest);
     } catch (error) {
       this.logger.error('Error creating delivery fee', error);
 
       if (error instanceof BentoException) {
         if (error.type === BentoExceptionType.UNAUTHORIZED) {
-          throw new AppAnauthorizedException('Token is invalid', error);
+          throw new AppUnauthorizedException('Token is invalid', error);
         }
-        throw new AppException(error.message, error);
+        throw new AppInternalServerException(error.message, error);
       }
 
-      throw new AppException('An error occurred', error);
+      throw new AppInternalServerException('An error occurred', error);
     }
   }
 
