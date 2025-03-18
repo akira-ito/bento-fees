@@ -1,26 +1,49 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
+import { Transform, Type } from 'class-transformer';
+import {
+  IsDefined,
+  IsNotEmpty,
+  IsNotEmptyObject,
+  IsNumber,
+  IsString,
+  ValidateNested,
+} from 'class-validator';
 import { DecimalTransformer } from 'src/transformer/decimal.transformer';
 import { DeliveryFeeRequestEntity } from '../entities/delivery-fee-request.entity';
 
 export class CoordinatesDto {
+  @IsNumber()
   lat: number;
+
+  @IsNumber()
   lng: number;
 }
 
 export class AddressFromDto {
+  @IsDefined()
+  @ValidateNested()
+  @IsNotEmptyObject()
+  @Type(() => CoordinatesDto)
   coordinates: CoordinatesDto;
 }
 
 export class AddressToDto {
+  @IsDefined()
+  @ValidateNested()
+  @IsNotEmptyObject()
+  @Type(() => CoordinatesDto)
   coordinatesAdjustment: CoordinatesDto;
 }
 
 export class MerchantDto {
+  @IsNotEmpty()
+  @IsString()
   id: string;
 }
 
 export class UserDto {
+  @IsNotEmpty()
+  @IsString()
   uuid: string;
 }
 
@@ -35,6 +58,10 @@ export class CreateDeliveryFeeReqDto {
       },
     },
   })
+  @IsDefined()
+  @ValidateNested()
+  @IsNotEmptyObject()
+  @Type(() => AddressFromDto)
   addressFrom: AddressFromDto;
 
   @ApiProperty({
@@ -46,6 +73,10 @@ export class CreateDeliveryFeeReqDto {
       },
     },
   })
+  @IsDefined()
+  @ValidateNested()
+  @IsNotEmptyObject()
+  @Type(() => AddressToDto)
   addressTo: AddressToDto;
 
   @ApiProperty({
@@ -54,6 +85,10 @@ export class CreateDeliveryFeeReqDto {
       id: 'merchant123',
     },
   })
+  @IsDefined()
+  @IsNotEmptyObject()
+  @ValidateNested()
+  @Type(() => MerchantDto)
   merchant: MerchantDto;
 
   @ApiProperty({
@@ -62,6 +97,10 @@ export class CreateDeliveryFeeReqDto {
       uuid: 'user-uuid-456',
     },
   })
+  @IsDefined()
+  @ValidateNested()
+  @IsNotEmptyObject()
+  @Type(() => UserDto)
   user: UserDto;
 }
 

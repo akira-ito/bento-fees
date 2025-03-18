@@ -8,8 +8,8 @@ import {
 } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
 import { BentoException } from 'src/bento/exceptions/bento.exception';
-import { AppInternalServerException } from '../exceptions/internal-server.exception';
-import { AppUnauthorizedException } from '../exceptions/unauthorized.exception';
+import { AppInternalServerException } from '../../exceptions/internal-server.exception';
+import { AppUnauthorizedException } from '../../exceptions/unauthorized.exception';
 import { AuthService } from './auth.service';
 import { Public } from './constant';
 import { SignInReqDto, SignInRespDto } from './dto/sign-in.dto';

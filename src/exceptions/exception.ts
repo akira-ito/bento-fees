@@ -6,6 +6,11 @@ export interface AppResponseException {
   readonly message: string;
   readonly messageCode: MessageCode;
   readonly error?: any;
+  readonly fields: {
+    name: string;
+    errors?: { [type: string]: string };
+    value?: any;
+  }[];
 }
 
 export class AppException extends HttpException {
@@ -14,12 +19,14 @@ export class AppException extends HttpException {
     messageCode: MessageCode,
     status: HttpStatus,
     error?: any,
+    fields?: AppResponseException['fields'],
   ) {
     super(
       {
         status,
         message,
         messageCode,
+        fields,
       } as AppResponseException,
       status,
       {

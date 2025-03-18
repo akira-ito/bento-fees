@@ -8,13 +8,19 @@ import {
   Query,
   Request,
 } from '@nestjs/common';
-import { ApiBearerAuth, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import {
+  ApiBearerAuth,
+  ApiOperation,
+  ApiQuery,
+  ApiResponse,
+} from '@nestjs/swagger';
 import {
   BentoException,
   BentoExceptionType,
 } from 'src/bento/exceptions/bento.exception';
-import { AppInternalServerException } from '../exceptions/internal-server.exception';
-import { AppUnauthorizedException } from '../exceptions/unauthorized.exception';
+import { AppErrorResponseDto } from 'src/filter/app-response.dto';
+import { AppInternalServerException } from '../../exceptions/internal-server.exception';
+import { AppUnauthorizedException } from '../../exceptions/unauthorized.exception';
 import { DeliveryFeesService } from './delivery-fees.service';
 import {
   CreateDeliveryFeeReqDto,
@@ -43,9 +49,52 @@ export class DeliveryFeesController {
     description: 'The record has been successfully created.',
     type: CreateDeliveryFeeRespDto,
   })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request.',
+    type: AppErrorResponseDto,
+    example: {
+      timestamp: '2025-03-18T10:43:09.934Z',
+      detail: 'Validation failed',
+      code: 'FIELDS_VALIDATION_ERROR',
+      message: 'Please check the fields, some of them are invalid',
+      fields: [
+        {
+          name: 'addressFrom.coordinates.lng',
+          errors: {
+            isNumber:
+              'lng must be a number conforming to the specified constraints',
+          },
+        },
+        {
+          name: 'addressTo',
+          errors: {
+            isDefined: 'addressTo should not be null or undefined',
+            isNotEmptyObject: 'addressTo must be a non-empty object',
+          },
+        },
+        {
+          name: 'merchant.id',
+          errors: {
+            isString: 'id must be a string',
+            isNotEmpty: 'id should not be empty',
+          },
+        },
+      ],
+    },
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized.',
+    type: AppErrorResponseDto,
+    example: {
+      timestamp: '2025-03-18T08:48:11.831Z',
+      detail: 'Token is required',
+      code: 'UNAUTHORIZED_USER',
+      message: 'Unauthorized user',
+    },
+  })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  @ApiResponse({ status: 400, description: 'Bad Request.' })
-  @ApiResponse({ status: 401, description: 'Unauthorized.' })
   async create(
     @Request() req,
     @Headers('User-Agent') userAgent,
@@ -74,19 +123,26 @@ export class DeliveryFeesController {
   }
 
   @Get('requests')
+  @ApiQuery({ name: 'order', enum: OrderType })
   @ApiResponse({
     status: 200,
     description: 'The list of delivery fee requests.',
     type: [FindDeliveryFeeRequestRespDto],
   })
   @ApiResponse({ status: 403, description: 'Forbidden.' })
-  @ApiResponse({ status: 400, description: 'Bad Request.' })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad Request.',
+    type: AppErrorResponseDto,
+  })
   @ApiResponse({ status: 401, description: 'Unauthorized.' })
   async findAllRequests(
     @Request() req,
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
-    @Query('order') order: OrderType = OrderType.DESC,
+
+    @Query('order')
+    order: OrderType = OrderType.DESC,
   ): Promise<FindDeliveryFeeRequestRespDto[]> {
     this.logger.log('Finding all delivery fee requests');
     const paginate = new PaginateReqDto(page, limit, order);
