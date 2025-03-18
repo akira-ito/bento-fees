@@ -34,6 +34,18 @@ import {
 
 @ApiBearerAuth()
 @Controller()
+@ApiResponse({
+  status: 401,
+  description: 'Unauthorized.',
+  type: AppErrorResponseDto,
+  example: {
+    timestamp: '2025-03-18T08:48:11.831Z',
+    detail: 'Token is required',
+    code: 'UNAUTHORIZED_USER',
+    message: 'Unauthorized user',
+  },
+})
+@ApiResponse({ status: 403, description: 'Forbidden.' })
 export class DeliveryFeesController {
   private readonly logger = new Logger(DeliveryFeesController.name);
 
@@ -83,18 +95,6 @@ export class DeliveryFeesController {
       ],
     },
   })
-  @ApiResponse({
-    status: 401,
-    description: 'Unauthorized.',
-    type: AppErrorResponseDto,
-    example: {
-      timestamp: '2025-03-18T08:48:11.831Z',
-      detail: 'Token is required',
-      code: 'UNAUTHORIZED_USER',
-      message: 'Unauthorized user',
-    },
-  })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
   async create(
     @Request() req,
     @Headers('User-Agent') userAgent,
@@ -123,24 +123,28 @@ export class DeliveryFeesController {
   }
 
   @Get('requests')
-  @ApiQuery({ name: 'order', enum: OrderType })
+  @ApiOperation({
+    summary: 'Find all delivery fee requests',
+    description: 'Find all delivery fee requests',
+  })
+  @ApiQuery({
+    name: 'order',
+    enum: OrderType,
+    default: OrderType.DESC,
+    required: false,
+    description: 'Order of the list',
+  })
+  @ApiQuery({ name: 'page', required: false, default: 1 })
+  @ApiQuery({ name: 'limit', required: false, default: 10 })
   @ApiResponse({
     status: 200,
     description: 'The list of delivery fee requests.',
     type: [FindDeliveryFeeRequestRespDto],
   })
-  @ApiResponse({ status: 403, description: 'Forbidden.' })
-  @ApiResponse({
-    status: 400,
-    description: 'Bad Request.',
-    type: AppErrorResponseDto,
-  })
-  @ApiResponse({ status: 401, description: 'Unauthorized.' })
   async findAllRequests(
     @Request() req,
     @Query('page') page: number = 1,
     @Query('limit') limit: number = 10,
-
     @Query('order')
     order: OrderType = OrderType.DESC,
   ): Promise<FindDeliveryFeeRequestRespDto[]> {

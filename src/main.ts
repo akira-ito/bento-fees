@@ -19,7 +19,7 @@ async function bootstrap() {
     .setDescription(
       'This is the API documentation for the Delivery-Fees microservice, which is part of the Bento project.',
     )
-    .setContact('Bento', 'https://bento.com', 'edson.ito@bento.com')
+    .setContact('Bento', 'https://bento.ky', 'edson.ito@bento.ky')
     .setLicense('MIT', 'https://opensource.org/licenses/MIT')
     .setVersion('1.0')
     .addBearerAuth({
