@@ -6,30 +6,28 @@ import { AppResponseException } from './exception';
 function getValidationErrors(
   errors: ValidationError[],
   parentName: string = '',
+  value?: any,
 ): AppResponseException['fields'] {
-  return (
-    errors.reduce(
-      (res: AppResponseException['fields'], error: ValidationError) => {
-        if (error.constraints)
-          return [
-            ...res,
-            {
-              name: `${parentName + error?.property}` || '',
-              errors: error.constraints,
-              value: error.value,
-            },
-          ];
-
+  return errors.reduce(
+    (res: AppResponseException['fields'], error: ValidationError) => {
+      if (error.constraints)
         return [
-          ...res,
-          ...getValidationErrors(
-            error?.children ?? [],
-            `${parentName + error.property}.`,
-          ),
+          {
+            name: `${parentName + error?.property}`,
+            errors: error.constraints,
+            value: value ?? error.value,
+          },
         ];
-      },
-      [] as AppResponseException['fields'],
-    ) || ([] as AppResponseException['fields'])
+
+      const childrenErrors =
+        getValidationErrors(
+          error?.children ?? [],
+          `${parentName + error.property}.`,
+          error.value,
+        ) ?? [];
+      return [...(res ?? []), ...childrenErrors];
+    },
+    [],
   );
 }
 

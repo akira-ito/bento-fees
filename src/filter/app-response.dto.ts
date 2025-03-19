@@ -5,6 +5,8 @@ export enum MessageCode {
   INTERNAL_SERVER_ERROR = 'The server unavailable, try again later',
   UNAUTHORIZED_USER = 'Unauthorized user',
   BAD_REQUEST = 'Bad request',
+  NOT_FOUND = 'Resource not found',
+  FORBIDDEN = 'Forbidden',
   FIELDS_VALIDATION_ERROR = 'Please check the fields, some of them are invalid',
 }
 
@@ -16,7 +18,7 @@ export class AppErrorResponseDto {
   timestamp: Date;
 
   @ApiProperty({ description: 'Detailed description of the error' })
-  detail: any;
+  detail: string;
 
   @ApiProperty({
     enum: Object.keys(MessageCode),
@@ -40,9 +42,17 @@ export class AppErrorResponseDto {
           type: 'string',
           description: 'Name of the field',
         },
-        message: {
+        errors: {
+          type: 'object',
+          description: 'List of errors associated with the field',
+          additionalProperties: {
+            type: 'string',
+            description: 'Description of the error',
+          },
+        },
+        value: {
           type: 'string',
-          description: 'Error message for the field',
+          description: 'Value of the field',
         },
       },
     },
@@ -51,7 +61,7 @@ export class AppErrorResponseDto {
 
   constructor(
     timestamp: Date,
-    detail: any,
+    detail: string,
     code: MessageCode,
     fields?: AppResponseException['fields'],
   ) {
