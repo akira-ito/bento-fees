@@ -1,5 +1,5 @@
 import { ValidationError } from '@nestjs/common';
-import { MessageCode } from 'src/filter/app-response.dto';
+import { MessageCode } from 'src/config/filter/app-error-response.dto';
 import { AppBadRequestException } from './bad-request.exception';
 import { AppResponseException } from './exception';
 

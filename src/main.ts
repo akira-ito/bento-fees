@@ -2,9 +2,9 @@ import { ConsoleLogger, ValidationPipe } from '@nestjs/common';
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { AppExceptionFilter } from './config/filter/app-exception.filter';
+import { HttpExceptionFilter } from './config/filter/http-exception.filter';
 import { validationPipeExceptionFactory } from './exceptions/validation-pipe-exception-factory';
-import { AppExceptionFilter } from './filter/exception.filter';
-import { HttpExceptionFilter } from './filter/http-exception.filter';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {

@@ -1,5 +1,5 @@
 import { HttpStatus } from '@nestjs/common';
-import { MessageCode } from 'src/filter/app-response.dto';
+import { MessageCode } from 'src/config/filter/app-error-response.dto';
 import { AppException, AppResponseException } from './exception';
 
 export class AppBadRequestException extends AppException {

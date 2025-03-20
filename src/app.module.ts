@@ -3,15 +3,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD, APP_INTERCEPTOR } from '@nestjs/core';
 import { JwtModule } from '@nestjs/jwt';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AppController } from './app.controller';
-import { BentoModule } from './bento/bento.module';
+import { AppController } from './adapters/api/v1/app/app.controller';
+import { AuthModule } from './adapters/api/v1/auth/auth.module';
+import { V1Module } from './adapters/api/v1/v1.module';
+import { BentoModule } from './adapters/bento/bento.module';
 import configuration, {
   AppConfiguration,
   DatabaseConfig,
 } from './config/configuration';
-import { AuthGuard } from './v1/auth/auth.guard';
-import { AuthModule } from './v1/auth/auth.module';
-import { V1Module } from './v1/v1.module';
+import { AuthGuard } from './config/guard/auth.guard';
 
 @Module({
   imports: [

@@ -1,5 +1,5 @@
 import { HttpException, HttpStatus } from '@nestjs/common';
-import { MessageCode } from 'src/filter/app-response.dto';
+import { MessageCode } from 'src/config/filter/app-error-response.dto';
 
 export interface AppResponseFieldException {
   readonly name: string;
