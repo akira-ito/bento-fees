@@ -101,11 +101,11 @@ The system uses bearer token authentication, signed and validated by the Bento.k
    1.1. If you cannot find calls to `https://api.bento.ky/`, you can get the **Bearer token** from the application cookies under the _token_ name.
    <p align="center"><img src="./assets/token-in-cookie.png" alt="Token in Cookie" /></p>
 
-2. You can also obtain a Bearer token by using the `http://localhost:3001/api/auth/login` endpoint (see the [Swagger documentation](http://localhost:3001/docs#/Auth/AuthController_signIn)). Simply fill in the username and password that you registered on the Bento.ky website. Ensure the variables BENTO_IDENTITY_HOST and BENTO_IDENTITY_API_KEY are set according to your Google Identity Toolkit API configuration.
+2. You can also obtain a Bearer token by using the `http://localhost:3001/api/v1/auth/login` endpoint (see the [Swagger documentation](http://localhost:3001/docs#/Auth/AuthController_signIn)). Simply fill in the username and password that you registered on the Bento.ky website. Ensure the variables BENTO_IDENTITY_HOST and BENTO_IDENTITY_API_KEY are set according to your Google Identity Toolkit API configuration.
 
    ```bash
    curl -X 'POST' \
-     'http://localhost:3001/api/auth/login' \
+     'http://localhost:3001/api/v1/auth/login' \
      -H 'accept: application/json' \
      -H 'Content-Type: application/json' \
      -d '{
