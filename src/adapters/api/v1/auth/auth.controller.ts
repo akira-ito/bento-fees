@@ -15,7 +15,7 @@ import { Public } from '../../../../config/guard/guard-constant';
 import { AuthService } from '../../../../core/auth/auth.service';
 import { SignInReqDto, SignInRespDto } from './dto/sign-in.dto';
 
-@Controller('auth')
+@Controller()
 export class AuthController {
   private readonly logger = new Logger(AuthController.name);
 

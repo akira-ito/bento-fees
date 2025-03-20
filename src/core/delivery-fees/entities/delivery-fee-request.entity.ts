@@ -1,4 +1,4 @@
-import { Column, Entity, Point } from 'typeorm';
+import { Column, Entity, Index, Point } from 'typeorm';
 import { BaseEntity } from './base.entity';
 
 export class Coordinates {
@@ -34,6 +34,7 @@ export class DeliveryFeeRequestEntity extends BaseEntity {
   @Column('geometry')
   addressTo: Point;
 
+  @Index()
   @Column('varchar', { length: 255 })
   userUuid: string;
 

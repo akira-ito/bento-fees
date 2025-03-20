@@ -33,7 +33,7 @@ import {
 } from './dto/find-delivery-fee-request.dto';
 
 import { Request as Req } from 'express';
-import { User } from 'src/core/user/entities/user.entity';
+import { User } from 'src/core/user/entities/user';
 
 @ApiBearerAuth()
 @Controller()

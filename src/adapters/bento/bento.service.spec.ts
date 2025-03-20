@@ -1,15 +1,18 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { BentoService } from './bento.service';
+import { ConfigModuleProvider } from 'src/config/providers/config-module.provider';
+import { BentoServicePortProvider } from 'src/core/bento/ports/bento.service';
+import { BentoModule } from './bento.module';
+import { BentoServiceAdapter } from './bento.service';
 
-describe('BentoService', () => {
-  let service: BentoService;
+describe('BentoServiceAdapter', () => {
+  let service: BentoServiceAdapter;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      providers: [BentoService],
+      imports: [ConfigModuleProvider, BentoModule],
     }).compile();
 
-    service = module.get<BentoService>(BentoService);
+    service = module.get<BentoServiceAdapter>(BentoServicePortProvider);
   });
 
   it('should be defined', () => {

@@ -9,7 +9,7 @@ import {
   BentoServicePort,
   BentoServicePortProvider,
 } from '../bento/ports/bento.service';
-import { User } from '../user/entities/user.entity';
+import { User } from '../user/entities/user';
 import {
   DeliveryFeeConfigurationEntity,
   DeliveryFeeConfigurationType,
@@ -71,8 +71,6 @@ export class DeliveryFeesService {
     user: User,
     paginate: PaginateReqDto,
   ): Promise<[DeliveryFeeRequestEntity[], number]> {
-    console.log(user);
-
     const [requests, total] =
       await this.deliveryFeeRequestsRepository.findAndCount({
         where: { userUuid: user.user_id },

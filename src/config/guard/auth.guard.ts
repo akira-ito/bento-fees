@@ -2,7 +2,7 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { JwtService } from '@nestjs/jwt';
 import { Request } from 'express';
-import { User } from 'src/core/user/entities/user.entity';
+import { User } from 'src/core/user/entities/user';
 import { AppUnauthorizedException } from '../../exceptions/unauthorized.exception';
 import { IS_PUBLIC_KEY } from './guard-constant';
 
