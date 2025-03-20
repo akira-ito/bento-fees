@@ -114,6 +114,10 @@ The system uses bearer token authentication, signed and validated by the Bento.k
    }'
    ```
 
+## Configuration for the Service
+
+The `delivery_fee_configurations` table allows you to configure various values used by the service, such as the margin fee (`MARGIN_FEE`). This table is responsible for maintaining some global configurations of the service.
+
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).

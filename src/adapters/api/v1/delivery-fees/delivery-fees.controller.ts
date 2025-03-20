@@ -56,8 +56,10 @@ export class DeliveryFeesController {
 
   @Post()
   @ApiOperation({
-    summary: 'Create a new delivery fee',
-    description: 'Create a new delivery fee request',
+    summary:
+      'Create and retrieve a new delivery fee with the margin fee applied',
+    description:
+      'Create and retrieve a new delivery fee with the margin fee applied',
   })
   @ApiResponse({
     status: 201,
@@ -100,7 +102,7 @@ export class DeliveryFeesController {
   })
   async create(
     @Request() req: Req,
-    @Headers('User-Agent') userAgent: string,
+    @Headers('User-Agent') userAgent: string | null,
     @Body() createDeliveryFeeDto: CreateDeliveryFeeReqDto,
   ): Promise<CreateDeliveryFeeRespDto> {
     this.logger.log('Creating delivery fee');
@@ -109,7 +111,7 @@ export class DeliveryFeesController {
       const deliveryFeeRequest = await this.deliveryFeesService.create(
         createDeliveryFeeDto,
         user.token,
-        userAgent,
+        userAgent ?? '',
       );
       return CreateDeliveryFeeRespDto.fromRequestEntity(deliveryFeeRequest);
     } catch (error) {
